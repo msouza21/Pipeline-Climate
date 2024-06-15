@@ -1,0 +1,90 @@
+services:
+  pyspark-notebook:
+    image: jupyter/pyspark-notebook:latest
+    container_name: pyspark-notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - G:/Files/Files Docker/Data_file:/Data_file
+      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark
+      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark/spark-logs
+    command: start-notebook.py --NotebookApp.token=''
+    networks:
+      - spark-network
+
+  java:
+    image: amazoncorretto:17
+    container_name: java
+    volumes:
+      - ./java:/app
+    command: tail -f /dev/null
+
+  spark-master:
+    image: bitnami/spark:3.5.0
+    container_name: spark-master
+    command: bin/spark-class org.apache.spark.deploy.master.Master
+    environment:
+      SPARK_MODE: master
+      SPARK_MASTER_CORES: 1
+      SPARK_MASTER_MEMORY: 2g
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+    volumes:
+      - G:/Files/Files Docker/Data_file:/Data_file
+      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark
+      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark/spark-logs
+    networks:
+      - spark-network
+
+  spark-worker-1:
+    image: bitnami/spark:3.5.0
+    container_name: spark-worker-1
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_MODE: worker
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 2g
+      SPARK_MASTER_URL: spark://spark-master:7077
+    volumes:
+      - G:/Files/Files Docker/Data_file:/Data_file
+      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark
+      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark/spark-logs
+    networks:
+      - spark-network
+
+  spark-worker-2:
+    image: bitnami/spark:3.5.0
+    container_name: spark-worker-2
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_MODE: worker
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 2g
+      SPARK_MASTER_URL: spark://spark-master:7077
+    volumes:
+      - G:/Files/Files Docker/Data_file:/Data_file
+      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark
+      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark/spark-logs
+    networks:
+      - spark-network
+
+  spark-history-server:
+    image: bitnami/spark:3.5.0
+    container_name: spark-history
+    depends_on:
+      - spark-master
+    volumes:
+      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark/spark-logs
+    ports:
+      - '18080:18080'
+    networks:
+      - spark-network
+
+networks:
+  spark-network:
+    driver: bridge

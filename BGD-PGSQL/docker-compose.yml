@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: pgsql
+    environment:
+      POSTGRES_DB: pgdata
+      POSTGRES_USER: pgdata
+      POSTGRES_PASSWORD: pgdata21
+    ports:
+      - "5440:5432"
+    volumes:
+      - ./pgsdata:/var/lib/postgresql/data
+      -  G:/Files/Files Docker/BGD-Projects:/data/bgd
