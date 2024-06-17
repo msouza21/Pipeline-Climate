@@ -3,13 +3,10 @@ services:
     image: mongo:latest
     container_name: mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: mgdata
-      MONGO_INITDB_ROOT_PASSWORD: mgdata21
+      MONGO_INITDB_ROOT_USERNAME: mongodb
+      MONGO_INITDB_ROOT_PASSWORD: mongodb123
     ports:
-      - 27019:27017
+      - 27020:27017
     volumes:
       - ./mgdata:/data/db
-      - G:/Files/Files Docker/BGD-Projects:/data/bgd
     command: mongod --bind_ip_all
-
-#mongodb://mgdata:mgdata21@localhost:27019/detals?authSource=admin

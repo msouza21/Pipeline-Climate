@@ -16,7 +16,7 @@ services:
     networks:
       - kafkabg-network
     volumes:
-      -  G:/Files/Files Docker/BGD-Projects/kafka_data:/BGD-Projects/kafka
+      -  ./kafka_data:/BGD-Projects/kafka
 
   broker-1:
     image: confluentinc/cp-server:7.4.0
@@ -55,7 +55,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      -  G:/Files/Files Docker/BGD-Projects/kafka_data:/BGD-Projects/kafka_brokers
+      -  ./kafka_data:/BGD-Projects/kafka_brokers
 
   broker-2:
     image: confluentinc/cp-server:7.4.0
@@ -94,7 +94,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - G:/Files/Files Docker/BGD-Projects/kafka_data:/BGD-Projects/kafka_brokers
+      - ./kafka_data:/BGD-Projects/kafka_brokers
 
   broker-3:
     image: confluentinc/cp-server:7.4.0
@@ -133,13 +133,13 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      -  G:/Files/Files Docker/BGD-Projects/kafka_data:/BGD-Projects/kafka_brokers
+      -  ./kafka_data:/BGD-Projects/kafka_brokers
 
   kafka-ui-web:
     image: provectuslabs/kafka-ui:latest
     container_name: user-interface
     ports:
-      - "8898:8080"
+      - "8802:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: "local"
       KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: "broker-1:29092,broker-2:29093,broker-3:29094"
@@ -148,7 +148,7 @@ services:
     networks:
       - kafkabg-network
     volumes:
-      -  G:/Files/Files Docker/BGD-Projects/kafka_data:/bitnami/kafka-ui
+      -  ./kafka_data:/bitnami/kafka-ui
 
 networks:
   kafkabg-network:

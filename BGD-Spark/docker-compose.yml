@@ -5,19 +5,12 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - G:/Files/Files Docker/Data_file:/Data_file
-      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark
-      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark/spark-logs
+      - ./Data_file:/Data_file
+      - ./spark:/spark
+      - ./spark-logs:/spark-logs
     command: start-notebook.py --NotebookApp.token=''
     networks:
       - spark-network
-
-  java:
-    image: amazoncorretto:17
-    container_name: java
-    volumes:
-      - ./java:/app
-    command: tail -f /dev/null
 
   spark-master:
     image: bitnami/spark:3.5.0
@@ -31,9 +24,9 @@ services:
       - "9090:8080"
       - "7077:7077"
     volumes:
-      - G:/Files/Files Docker/Data_file:/Data_file
-      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark
-      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark/spark-logs
+      - ./Data_file:/Data_file
+      - ./spark:/spark
+      - ./spark-logs:/spark-logs
     networks:
       - spark-network
 
@@ -49,9 +42,9 @@ services:
       SPARK_WORKER_MEMORY: 2g
       SPARK_MASTER_URL: spark://spark-master:7077
     volumes:
-      - G:/Files/Files Docker/Data_file:/Data_file
-      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark
-      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark/spark-logs
+      - ./Data_file:/Data_file
+      - ./spark:/spark
+      - ./spark-logs:/spark-logs
     networks:
       - spark-network
 
@@ -67,9 +60,9 @@ services:
       SPARK_WORKER_MEMORY: 2g
       SPARK_MASTER_URL: spark://spark-master:7077
     volumes:
-      - G:/Files/Files Docker/Data_file:/Data_file
-      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark
-      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark/spark-logs
+      - ./Data_file:/Data_file
+      - ./spark:/spark
+      - ./spark-logs:/spark-logs
     networks:
       - spark-network
 
@@ -79,7 +72,7 @@ services:
     depends_on:
       - spark-master
     volumes:
-      - G:/Files/Files Docker/BGD-Projects:/BGD-Projects/Spark/spark-logs
+      - ./spark-logs:/spark-logs
     ports:
       - '18080:18080'
     networks:

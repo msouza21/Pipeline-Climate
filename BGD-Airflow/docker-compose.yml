@@ -32,13 +32,13 @@ x-airflow-common:
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
-  image: ${AIRFLOW_IMAGE_NAME:-dck_airflow:2.9.0}
+  image: ${AIRFLOW_IMAGE_NAME:-dck_airflow:2.9.0} #But you can use the image apache/ariflow:2.9.0
   # build: .
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://bgdflow:bgdflow@postgres/bgdflow
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://bgdflow:bgdflow@postgres/bgdflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
@@ -56,14 +56,11 @@ x-airflow-common:
     # If you want to use it, outcomment it and replace airflow.cfg with the name of your config file
     # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
   volumes:
-    - G:/Files/Files Docker/BGD-Airflow/dags:/opt/airflow/dags
-    - G:/Files/Files Docker/BGD-Airflow/logs:/opt/airflow/logs
-    - G:/Files/Files Docker/BGD-Airflow/config:/opt/airflow/config
-    - G:/Files/Files Docker/BGD-Airflow/BGD-Airflow/plugins:/opt/airflow/plugins
-    
-    - G:/Files/Files Docker/BGD-Projects/pipeline-climate/airflow/dags:/opt/airflow/dags/pipeline-climate
-    - G:/Files/Files Docker/BGD-Projects/pipeline-climate/airflow/logs:/opt/airflow/logs/pipeline-climate
-      
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./config:/opt/airflow/config
+      - ./plugins:/opt/airflow/plugins
+        
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -77,13 +74,13 @@ services:
     image: postgres:13
     container_name: postgres
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: bgd
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
     ports:
-      - "5435:5432"
+      - "5434:5432"
     volumes:
-      - G:/Files/Files Docker/BGD-Airflow/postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/postgres_data/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "bgdflow"]
       interval: 10s
@@ -109,20 +106,17 @@ services:
     container_name: webserver
     command: webserver
     ports:
-      - "8080:8080"
+      - "8082:8080"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      test: ["CMD", "curl", "--fail", "http://localhost:8082/health"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 30s
     restart: always
     volumes:
-      - G:/Files/Files Docker/BGD-Airflow/dags:/opt/airflow/dags
-      - G:/Files/Files Docker/BGD-Airflow/logs:/opt/airflow/logs
-      
-      - G:/Files/Files Docker/BGD-Projects/pipeline-climate/airflow/dags:/opt/airflow/dags/pipeline-climate
-      - G:/Files/Files Docker/BGD-Projects/pipeline-climate/airflow/logs:/opt/airflow/logs/pipeline-climate
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
       
     depends_on:
       airflow-init:
