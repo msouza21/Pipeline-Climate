@@ -3,7 +3,7 @@ services:
     image: jupyter/pyspark-notebook:latest
     container_name: pyspark-notebook
     ports:
-      - "8888:8888"
+      - "8892:8888"
     volumes:
       - ./Data_file:/Data_file
       - ./spark:/spark
@@ -21,7 +21,7 @@ services:
       SPARK_MASTER_CORES: 1
       SPARK_MASTER_MEMORY: 2g
     ports:
-      - "9090:8080"
+      - "9092:8080"
       - "7077:7077"
     volumes:
       - ./Data_file:/Data_file
@@ -74,7 +74,7 @@ services:
     volumes:
       - ./spark-logs:/spark-logs
     ports:
-      - '18080:18080'
+      - '18082:18080'
     networks:
       - spark-network
 
