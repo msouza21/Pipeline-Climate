@@ -12,7 +12,7 @@ def deploy_services():
     for service in services:
         service_dir = os.path.join(BASE_DIR, service)
         compose_file = os.path.join(service_dir, 'docker-compose.yml')
-        print(f"Checking {compose_file} for {service}")
+        print(f"Checking {service} compose")
         
         if os.path.exists(compose_file):
             print(f"Deploying {service}...")
