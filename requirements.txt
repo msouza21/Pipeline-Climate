@@ -3,6 +3,7 @@ apache-airflow-providers-amazon
 apache-airflow-providers-apache-spark
 apache-airflow-providers-postgres
 confluent-kafka
+dotenv
 pyspark
 psycopg2-binary
 pytest

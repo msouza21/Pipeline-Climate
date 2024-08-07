@@ -6,7 +6,7 @@ with open('../ignore/config.json') as config_file:
     config = json.load(config_file)
     BASE_DIR = config.get("BASE_DIR").rstrip('/')
 
-services = ["airflow","kafka", "spark", "postgres"]
+services = ["airflow", "kafka", "spark", "postgres"]
 
 def deploy_services():
     for service in services:
