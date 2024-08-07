@@ -15,7 +15,7 @@ The project structure is organized as follows:
 - BGD-Project
     - └── pipeline-climate
         -    ├── airflow
-        -    ├── data w/ folders /ingested, /processed and /stored
+        -    ├── data w/ folders /processed and /stored
         -    ├── ignore (folder to ignore some files)
         -    ├── kafka
         -    ├── postgres
